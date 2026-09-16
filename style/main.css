@@ -1,0 +1,58 @@
+:root {
+  --pico-background-color: #282828;
+  --pico-color: #ebdbb2;
+  --pico-muted-color: #a89984;
+
+  --pico-card-background-color: #3c3836;
+  --pico-card-border-color: #504945;
+
+  --pico-primary: #d79921;
+  --pico-primary-hover: #fabd2f;
+
+  --pico-active: #689d6a;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  background: var(--pico-background-color);
+}
+
+h1 {
+  color: #fb4934;
+  font-size: 36px;
+  margin-bottom: 1rem;
+  border: 2px solid;
+  border-color: var(--pico-primary);
+  border-radius: 6px;
+}
+
+p,
+a {
+  color: #ebdbb2;
+  font-style: normal;
+}
+
+.topnav {
+  background-color: #3c3836;
+  overflow: hidden;
+}
+
+.topnav a {
+  float: left;
+  color: #ebdbb2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  text-shadow: 2px 2px 4px #000000;
+  background-color: #504945;
+}
+
+.topnav a.active {
+  background-color: var(--pico-active);
+  color: #ebdbb2;
+}
