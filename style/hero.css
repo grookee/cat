@@ -1,0 +1,96 @@
+.hero {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 2rem 1rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-text {
+  flex: 1 1 280px;
+  max-width: 380px;
+  text-align: left;
+}
+
+.hero-text h1 {
+  text-align: left;
+  margin-bottom: 0.75rem;
+}
+
+.hero-text p {
+  font-size: 1.05rem;
+  color: var(--pico-muted-color, #a89984);
+}
+
+.mascot {
+  width: 260px;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.tail {
+  transform-box: view-box;
+  transform-origin: 236px 214px;
+  animation: swish 2.6s ease-in-out infinite;
+}
+
+.eye {
+  transform-box: view-box;
+  animation: blink 5.5s ease-in-out infinite;
+}
+
+.eye-r {
+  animation-delay: 0.12s;
+}
+
+.pupil {
+  transition: transform 0.08s linear;
+}
+
+.breathe {
+  transform-box: view-box;
+  transform-origin: 160px 170px;
+  animation: breathe 3.4s ease-in-out infinite;
+}
+
+@keyframes swish {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.015);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tail,
+  .eye,
+  .breathe {
+    animation: none;
+  }
+}

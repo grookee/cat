@@ -14,15 +14,213 @@
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     />
     <link rel="stylesheet" href="style/main.css" />
+    <link rel="stylesheet" href="style/hero.css" />
+    <link rel="stylesheet" href="style/cursor.css" />
     <title>elso weboldal kicsit izgulok</title>
   </head>
   <header>
     <div class="topnav">
       <a class="active" href="#">othon!</a>
       <a href="cica.html">cica</a>
+      <a href="facts.html">tények</a>
+      <a href="3d.html">3d</a>
+      <a href="gondozas.html">gondozás</a>
     </div>
   </header>
   <body>
-    <h1 style="text-align: center">szia</h1>
+    <section class="hero">
+      <div class="hero-text">
+        <h1>szia</h1>
+        <p>
+          Ez itt az én kis zugom az interneten. A cica a jobb oldalon mindenhova
+          követ a szemével, szóval csak óvatosan kishaver.
+        </p>
+      </div>
+
+      <svg
+        id="mascot"
+        class="mascot"
+        viewBox="0 0 320 300"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g class="tail">
+          <path
+            d="M236 214 C 272 214 292 172 276 132 C 266 106 238 108 234 132"
+            fill="none"
+            stroke="#d79921"
+            stroke-width="16"
+            stroke-linecap="round"
+          />
+        </g>
+
+        <g class="breathe">
+          <ellipse
+            cx="160"
+            cy="222"
+            rx="88"
+            ry="66"
+            fill="#d79921"
+            stroke="#282828"
+            stroke-width="2.5"
+          />
+          <ellipse
+            cx="128"
+            cy="280"
+            rx="17"
+            ry="11"
+            fill="#fabd2f"
+            stroke="#282828"
+            stroke-width="2"
+          />
+          <ellipse
+            cx="192"
+            cy="280"
+            rx="17"
+            ry="11"
+            fill="#fabd2f"
+            stroke="#282828"
+            stroke-width="2"
+          />
+
+          <path
+            d="M100 88 L88 28 L138 74 Z"
+            fill="#d79921"
+            stroke="#282828"
+            stroke-width="2.5"
+            stroke-linejoin="round"
+          />
+          <path d="M104 78 L98 42 L128 70 Z" fill="#fb4934" />
+          <path
+            d="M220 88 L232 28 L182 74 Z"
+            fill="#d79921"
+            stroke="#282828"
+            stroke-width="2.5"
+            stroke-linejoin="round"
+          />
+          <path d="M216 78 L222 42 L192 70 Z" fill="#fb4934" />
+
+          <circle
+            cx="160"
+            cy="140"
+            r="68"
+            fill="#d79921"
+            stroke="#282828"
+            stroke-width="2.5"
+          />
+
+          <g stroke="#3c3836" stroke-width="1.6" stroke-linecap="round">
+            <line x1="96" y1="128" x2="52" y2="120" />
+            <line x1="94" y1="140" x2="50" y2="140" />
+            <line x1="96" y1="152" x2="52" y2="160" />
+            <line x1="224" y1="128" x2="268" y2="120" />
+            <line x1="226" y1="140" x2="270" y2="140" />
+            <line x1="224" y1="152" x2="268" y2="160" />
+          </g>
+
+          <g class="eye eye-l">
+            <ellipse
+              cx="130"
+              cy="138"
+              rx="17"
+              ry="21"
+              fill="#ebdbb2"
+              stroke="#282828"
+              stroke-width="2"
+            />
+            <circle
+              id="pupilL"
+              class="pupil"
+              cx="130"
+              cy="140"
+              r="7"
+              fill="#282828"
+            />
+          </g>
+          <g class="eye eye-r">
+            <ellipse
+              cx="190"
+              cy="138"
+              rx="17"
+              ry="21"
+              fill="#ebdbb2"
+              stroke="#282828"
+              stroke-width="2"
+            />
+            <circle
+              id="pupilR"
+              class="pupil"
+              cx="190"
+              cy="140"
+              r="7"
+              fill="#282828"
+            />
+          </g>
+
+          <path
+            d="M150 168 L170 168 L160 182 Z"
+            fill="#fb4934"
+            stroke="#282828"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M160 182 C 154 194 144 194 136 186"
+            fill="none"
+            stroke="#282828"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <path
+            d="M160 182 C 166 194 176 194 184 186"
+            fill="none"
+            stroke="#282828"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </g>
+      </svg>
+    </section>
+
+    <script>
+      (function () {
+        var svg = document.getElementById("mascot");
+        var pupils = [
+          { el: document.getElementById("pupilL"), cx: 130, cy: 140 },
+          { el: document.getElementById("pupilR"), cx: 190, cy: 140 },
+        ];
+        var maxOffset = 4.5;
+
+        function updateEyes(clientX, clientY) {
+          var rect = svg.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          var scaleX = 320 / rect.width;
+          var scaleY = 300 / rect.height;
+          var px = (clientX - rect.left) * scaleX;
+          var py = (clientY - rect.top) * scaleY;
+
+          pupils.forEach(function (p) {
+            var dx = px - p.cx;
+            var dy = py - p.cy;
+            var dist = Math.hypot(dx, dy) || 1;
+            var r = Math.min(maxOffset, dist / 14);
+            var tx = (dx / dist) * r;
+            var ty = (dy / dist) * r;
+            p.el.setAttribute(
+              "transform",
+              "translate(" + tx.toFixed(2) + "," + ty.toFixed(2) + ")",
+            );
+          });
+        }
+
+        document.addEventListener("mousemove", function (e) {
+          updateEyes(e.clientX, e.clientY);
+        });
+        document.addEventListener("touchmove", function (e) {
+          if (e.touches && e.touches[0]) {
+            updateEyes(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

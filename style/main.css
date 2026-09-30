@@ -22,8 +22,8 @@ h1 {
   color: #fb4934;
   font-size: 36px;
   margin-bottom: 1rem;
-  border: 2px solid;
-  border-color: var(--pico-primary);
+  /*border: 2px solid;*/
+  /*border-color: var(--pico-primary);*/
   border-radius: 6px;
 }
 

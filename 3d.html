@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style/main.css" />
+    <link rel="stylesheet" href="style/three-cat.css" />
+    <link rel="stylesheet" href="style/cursor.css" />
+    <title>3d cica</title>
+  </head>
+  <header>
+    <div class="topnav">
+      <a href="index.html">othon!</a>
+      <a href="cica.html">cica</a>
+      <a href="facts.html">tények</a>
+      <a class="active" href="#">3d</a>
+      <a href="gondozas.html">gondozás</a>
+    </div>
+  </header>
+  <body>
+    <h1 style="text-align: center">3d cica</h1>
+    <p class="scene-hint">
+      Húzd az egérrel, hogy körbeforgasd, kattints rá, hogy ugorjon egyet.
+    </p>
+    <div id="scene">
+      <div id="scene-status">modell betöltése…</div>
+    </div>
+
+    <p class="model-credit">
+      3D Modell:
+      <strong>"Kitten by Poly"</strong>, készítette
+      <a
+        href="https://poly.pizza/u/Poly%20by%20Google"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Google</a
+      >
+      <a
+        href="https://creativecommons.org/licenses/by/3.0/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >[CC-BY]</a
+      >
+      licenc alatt, elérhető a
+      <a
+        href="https://poly.pizza/m/dBJgGEu5bHW"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Poly Pizza-n</a
+      >.
+    </p>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+      var container = document.getElementById("scene");
+      var statusEl = document.getElementById("scene-status");
+
+      var MODEL_URL = "assets/models/cat.glb";
+
+      var GRUV = {
+        bg: 0x282828,
+        floor: 0x3c3836,
+        yarn1: 0xfb4934,
+        yarn2: 0x689d6a,
+        ear: 0xfabd2f,
+      };
+
+      var scene = new THREE.Scene();
+      scene.background = new THREE.Color(GRUV.bg);
+      scene.fog = new THREE.Fog(GRUV.bg, 8, 20);
+
+      var camera = new THREE.PerspectiveCamera(
+        45,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        100,
+      );
+      camera.position.set(0, 2.4, 6.5);
+
+      var renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      container.appendChild(renderer.domElement);
+
+      var controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.8;
+      controls.minDistance = 2.5;
+      controls.maxDistance = 12;
+      controls.maxPolarAngle = Math.PI * 0.5 - 0.02;
+      controls.target.set(0, 0.6, 0);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+      var key = new THREE.DirectionalLight(0xffffff, 1.1);
+      key.position.set(4, 6, 4);
+      key.castShadow = true;
+      key.shadow.mapSize.set(1024, 1024);
+      scene.add(key);
+      var rim = new THREE.DirectionalLight(0xfabd2f, 0.35);
+      rim.position.set(-4, 2, -3);
+      scene.add(rim);
+
+      var floor = new THREE.Mesh(
+        new THREE.CircleGeometry(30, 64),
+        new THREE.MeshStandardMaterial({ color: GRUV.floor, roughness: 1 }),
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      var yarns = [];
+      [
+        { color: GRUV.yarn1, r: 2.6, h: 0.5, speed: 0.6 },
+        { color: GRUV.yarn2, r: 3.2, h: 0.9, speed: -0.45 },
+        { color: GRUV.yarn1, r: 3.8, h: 0.3, speed: 0.35 },
+      ].forEach(function (cfg, i) {
+        var mat = new THREE.MeshStandardMaterial({
+          color: cfg.color,
+          roughness: 0.4,
+        });
+        var ball = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), mat);
+        var wire = new THREE.Mesh(
+          new THREE.SphereGeometry(0.225, 8, 6),
+          new THREE.MeshBasicMaterial({ color: 0x282828, wireframe: true }),
+        );
+        ball.add(wire);
+        ball.castShadow = true;
+        scene.add(ball);
+        yarns.push({
+          mesh: ball,
+          radius: cfg.r,
+          height: cfg.h,
+          speed: cfg.speed,
+          offset: i * 2,
+        });
+      });
+
+      var cat = null;
+      var catBaseY = 0;
+      var mixer = null;
+      var clickTarget = null;
+      var debugHelper = null;
+
+      function computeBounds(root) {
+        root.updateMatrixWorld(true);
+        var box = new THREE.Box3();
+        root.traverse(function (n) {
+          if (!n.isMesh || !n.geometry) return;
+          if (n.geometry.boundingBox === null) n.geometry.computeBoundingBox();
+          if (!n.geometry.boundingBox) return;
+          box.union(n.geometry.boundingBox.clone().applyMatrix4(n.matrixWorld));
+        });
+        return box;
+      }
+
+      function buildFallbackCat() {
+        var group = new THREE.Group();
+        var bodyMat = new THREE.MeshStandardMaterial({
+          color: 0xd79921,
+          roughness: 0.6,
+        });
+        var earMat = new THREE.MeshStandardMaterial({
+          color: GRUV.ear,
+          roughness: 0.6,
+        });
+        var body = new THREE.Mesh(
+          new THREE.CapsuleGeometry(0.5, 0.8, 4, 12),
+          bodyMat,
+        );
+        body.rotation.z = Math.PI / 2;
+        body.position.y = 0.6;
+        body.castShadow = true;
+        group.add(body);
+        var head = new THREE.Mesh(
+          new THREE.SphereGeometry(0.45, 20, 16),
+          bodyMat,
+        );
+        head.position.set(0.85, 0.95, 0);
+        head.castShadow = true;
+        group.add(head);
+        [-1, 1].forEach(function (side) {
+          var ear = new THREE.Mesh(
+            new THREE.ConeGeometry(0.14, 0.28, 4),
+            earMat,
+          );
+          ear.position.set(0.95, 1.35, side * 0.24);
+          ear.castShadow = true;
+          group.add(ear);
+        });
+        return group;
+      }
+
+      function onModelReady(root) {
+        cat = root;
+        clickTarget = root;
+        scene.add(cat);
+        catBaseY = cat.position.y;
+        statusEl.style.display = "none";
+      }
+
+      var loader = new GLTFLoader();
+      loader.load(
+        MODEL_URL,
+        function (gltf) {
+          var root = gltf.scene || gltf.scenes[0];
+          var meshCount = 0;
+          var skinnedCount = 0;
+          root.traverse(function (n) {
+            if (n.isMesh) {
+              meshCount++;
+              n.castShadow = true;
+              n.receiveShadow = true;
+              n.frustumCulled = false;
+
+              if (n.isSkinnedMesh) {
+                skinnedCount++;
+                var mats = Array.isArray(n.material)
+                  ? n.material
+                  : [n.material];
+                mats.forEach(function (m) {
+                  m.skinning = false;
+                  m.needsUpdate = true;
+                });
+              }
+            }
+          });
+          console.log(
+            "[3d cica] modell betöltve, mesh-ek száma:",
+            meshCount,
+            "ebből skinned:",
+            skinnedCount,
+          );
+          if (meshCount === 0) {
+            console.warn(
+              "[3d cica] a modellben nincs egyetlen mesh sem – valószínűleg a .glb fájl sérült vagy Git LFS pointer-fájl töltődött le a bináris helyett. Nyisd meg a .glb fájlt szövegszerkesztőben: ha 'version https://git-lfs...' szöveggel kezdődik, akkor ez a hiba oka.",
+            );
+          }
+
+          if (gltf.animations && gltf.animations.length) {
+            console.log(
+              "[3d cica] animációk (nem lejátszva):",
+              gltf.animations.map(function (a) {
+                return a.name;
+              }),
+            );
+          }
+
+          var box = computeBounds(root);
+          var size = new THREE.Vector3();
+          var center = new THREE.Vector3();
+          box.getSize(size);
+          box.getCenter(center);
+          console.log("[3d cica] bounding box méret:", size, "közép:", center);
+
+          var maxDim = Math.max(size.x, size.y, size.z);
+          if (!isFinite(maxDim) || maxDim <= 0) {
+            console.warn(
+              "[3d cica] érvénytelen bounding box, alapértelmezett méretezés.",
+            );
+            maxDim = 1;
+          }
+          var scale = 2 / maxDim;
+          root.scale.setScalar(scale);
+
+          box = computeBounds(root);
+          box.getCenter(center);
+          root.position.x -= center.x;
+          root.position.z -= center.z;
+          root.position.y -= box.min.y;
+
+          // var helper = new THREE.BoxHelper(root, 0xfb4934);
+          // scene.add(helper);
+          // debugHelper = helper;
+
+          onModelReady(root);
+        },
+        undefined,
+        function (err) {
+          console.error("[3d cica] GLTFLoader hiba:", err);
+          statusEl.textContent =
+            "a modell nem töltődött be – helyette egy egyszerű placeholder látszik";
+          onModelReady(buildFallbackCat());
+        },
+      );
+
+      var raycaster = new THREE.Raycaster();
+      var pointer = new THREE.Vector2();
+      var pounce = 0;
+      renderer.domElement.addEventListener("pointerdown", function (e) {
+        if (!clickTarget) return;
+        var rect = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(pointer, camera);
+        var hits = raycaster.intersectObject(clickTarget, true);
+        if (hits.length) pounce = 0.001;
+      });
+
+      function onResize() {
+        var w = container.clientWidth,
+          h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
+      window.addEventListener("resize", onResize);
+
+      var clock = new THREE.Clock();
+      function animate() {
+        requestAnimationFrame(animate);
+        var dt = clock.getDelta();
+        var t = clock.elapsedTime;
+
+        if (mixer) mixer.update(dt);
+
+        if (cat) {
+          if (pounce > 0) {
+            pounce += 0.09;
+            var jump = Math.sin(Math.min(pounce, 1) * Math.PI);
+            cat.position.y = catBaseY + jump * 0.5;
+            cat.rotation.x = -jump * 0.12;
+            if (pounce >= 1) {
+              pounce = 0;
+              cat.rotation.x = 0;
+              cat.position.y = catBaseY;
+            }
+          } else {
+            cat.position.y = catBaseY + Math.sin(t * 1.4) * 0.03;
+          }
+        }
+
+        yarns.forEach(function (y) {
+          var a = t * y.speed + y.offset;
+          y.mesh.position.set(
+            Math.cos(a) * y.radius,
+            y.height + Math.sin(t + y.offset) * 0.15,
+            Math.sin(a) * y.radius,
+          );
+          y.mesh.rotation.y += 0.01;
+        });
+
+        if (debugHelper) debugHelper.update();
+
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>

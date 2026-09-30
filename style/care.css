@@ -1,0 +1,73 @@
+.care-intro {
+  max-width: 640px;
+  margin: 1rem 0 1.5rem;
+}
+
+.care-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.care-card {
+  background-color: var(--pico-card-background-color, #3c3836);
+  border: 1px solid var(--pico-card-border-color, #504945);
+  border-radius: 8px;
+  padding: 1.25rem 1.4rem;
+}
+
+.care-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.care-icon {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #282828;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.care-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.care-card h3 {
+  margin: 0;
+  color: #fabd2f;
+  font-size: 1.1rem;
+}
+
+.care-card p {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--pico-color, #ebdbb2);
+}
+
+.care-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.95rem;
+}
+
+.care-card li {
+  margin-bottom: 0.3rem;
+  color: var(--pico-color, #ebdbb2);
+}
+
+.care-note {
+  max-width: 640px;
+  margin: 0 auto 2rem;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid #fb4934;
+  background-color: var(--pico-card-background-color, #3c3836);
+  border-radius: 0 6px 6px 0;
+}
